@@ -1,3 +1,5 @@
+from flask import Flask
+from threading import Thread
 from main import app
 import pyrogram, random
 from pyrogram import filters, idle
@@ -5,6 +7,24 @@ from pyrogram.errors import FloodWait
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message, CallbackQuery
 from main.wall import get_wallpapers, get_unsplash
 from main.db_funcs import *
+
+web_app = Flask(__name__)
+
+@web_app.route('/')
+def home():
+    return """
+    <center>
+        <h1>⚜️ VIP WALLPAPER BOT ⚜️</h1>
+        <p>Bot Is Running Successfully ✅</p>
+    </center>
+    """
+
+def run_web():
+    web_app.run(host="0.0.0.0", port=8080)
+
+def keep_alive():
+    t = Thread(target=run_web)
+    t.start()
 
 START = """
 ╭━━━〔 ⚜️ 𝙑𝙄𝙋 𝙒𝘼𝙇𝙇𝙋𝘼𝙋𝙀𝙍 𝙃𝙐𝘽 ⚜️ 〕━━━╮
@@ -176,9 +196,14 @@ async def logo_doc(_,query):
 
 
 if __name__ == "__main__":
-  print("==================================")
-  print("[INFO]: WALLPAPER BOT STARTED BOT SUCCESSFULLY")
-  print("==========JOIN @log_ak_bot=========")
 
-  idle()
-  print("[INFO]: WALLPAPER BOT STOPPED")
+    keep_alive()
+
+    print("==================================")
+    print("[INFO]: VIP WALLPAPER BOT STARTED")
+    print("==========JOIN @log_ak_bot=========")
+
+    app.run()
+    idle()
+
+    print("[INFO]: BOT STOPPED")
